@@ -14,51 +14,37 @@ namespace PizzaWebApi.Repositories
 
         public async Task<Pizza> Create(Pizza pizza)
         {
-            await using (_context)
-            {
-                await _context.Pizzas.AddAsync(pizza);
-                await _context.SaveChangesAsync();
-                return pizza;
-            }
+            await _context.Pizzas.AddAsync(pizza);
+            await _context.SaveChangesAsync();
+            return pizza;
         }
 
         public async Task Delete(int id)
         {
-            await using (_context)
+            var book = await _context.Pizzas.FindAsync(id);
+            if (book is not null)
             {
-                var book = await _context.Pizzas.FindAsync(id);
-                if (book is not null)
-                {
-                    _context.Pizzas.Remove(book);
-                    await _context.SaveChangesAsync();
-                }
+                _context.Pizzas.Remove(book);
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task<IEnumerable<Pizza>> Get()
         {
-            await using (_context)
-            {
-                return await _context.Pizzas.ToListAsync();
-            }
+            return await _context.Pizzas.ToListAsync();
         }
 
         public async Task<Pizza?> Get(int id)
         {
-            await using (_context)
-            {
-                return await _context.Pizzas.FindAsync(id);
-            }
+            return await _context.Pizzas.FindAsync(id);
         }
 
         public async Task Update(Pizza pizza)
         {
-            await using (_context)
-            {
-                _context.Pizzas.Update(pizza);
-                await _context.SaveChangesAsync();
-            }
+            _context.Pizzas.Update(pizza);
+            await _context.SaveChangesAsync();
         }
+
         private bool disposed = false;
         protected virtual void Dispose(bool disposing)
         {
